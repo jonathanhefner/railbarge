@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  builder:
+    build:
+      context: ./builder
+      args:
+        RUBY_VERSION: $RUBY_VERSION
+    image: railbarge/builder:dev
+  app:
+    build:
+      context: ./app
+      args:
+        RUBY_VERSION: $RUBY_VERSION
+    image: railbarge/app:dev
