@@ -61,5 +61,5 @@ ONBUILD COPY --chown=1000:1000 . .
 ONBUILD USER 1000:1000
 ONBUILD RUN --mount=type=secret,required=false,id=config/master.key,target=config/master.key \
             --mount=type=secret,required=false,id=RAILS_MASTER_KEY,target=config/master.key \
-              dockhand prepare-rails-app --clean
+              HOME="/tmp" dockhand prepare-rails-app --clean
 ONBUILD USER root
