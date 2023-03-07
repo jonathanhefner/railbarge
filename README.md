@@ -112,7 +112,7 @@ Many of the above steps can be configured via build args.  For example:
   ARG NODE_ENV="development"
 
   # Specify the subdirectory of your application that contains the package.json
-  # file, such as for a dedicated front-end client
+  # file, such as for a dedicated front-end client (default: ".")
   ARG PACKAGE_JSON_DIR="frontend"
 
   # Override the user name (default: "rails")

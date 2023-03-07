@@ -23,7 +23,8 @@ ONBUILD ENV NODE_ENV="${NODE_ENV:-production}"
 
 
 ONBUILD ARG APP_DIR
-ONBUILD WORKDIR "/artifacts/${APP_DIR:-/rails}"
+ONBUILD ARG APP_DIR="${APP_DIR:-/rails}"
+ONBUILD WORKDIR "/artifacts/${APP_DIR}"
 ONBUILD RUN chmod o=u .
 
 
@@ -40,6 +41,7 @@ ONBUILD RUN --mount=type=cache,target=/usr/local/bundle/cache,sharing=locked \
 
 
 ONBUILD ARG PACKAGE_JSON_DIR
+ONBUILD ARG PACKAGE_JSON_DIR="${PACKAGE_JSON_DIR:-.}"
 ONBUILD WORKDIR "${PACKAGE_JSON_DIR}"
 
 ONBUILD COPY $PACKAGE_JSON_DIR/package.json* $PACKAGE_JSON_DIR/.node-version* .
@@ -54,7 +56,7 @@ ONBUILD RUN --mount=type=cache,target=/usr/local/share/.cache/yarn,sharing=locke
             --mount=type=cache,target=/root/.local/share/pnpm/store,sharing=locked \
               dockhand install-node-modules --optional
 
-ONBUILD WORKDIR "${PACKAGE_JSON_DIR:+..}"
+ONBUILD WORKDIR "/artifacts/${APP_DIR}"
 
 
 ONBUILD COPY --chown=1000:1000 . .
@@ -63,4 +65,4 @@ ONBUILD RUN --mount=type=secret,required=false,id=config/master.key,target=confi
             --mount=type=secret,required=false,id=RAILS_MASTER_KEY,target=config/master.key \
               HOME="/tmp" dockhand prepare-rails-app --clean
 ONBUILD USER root
-ONBUILD RUN chown root "${PACKAGE_JSON_DIR:-.}" && chmod o=u "${PACKAGE_JSON_DIR:-.}"
+ONBUILD RUN chown root "${PACKAGE_JSON_DIR}" && chmod o=u "${PACKAGE_JSON_DIR}"
