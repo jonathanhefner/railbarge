@@ -24,7 +24,7 @@ ONBUILD ENV NODE_ENV="${NODE_ENV:-production}"
 
 ONBUILD ARG APP_DIR
 ONBUILD WORKDIR "/artifacts/${APP_DIR:-/rails}"
-ONBUILD RUN chown 1000:1000 .
+ONBUILD RUN chmod o=u .
 
 
 ONBUILD COPY Gemfile Gemfile.lock .
@@ -63,3 +63,4 @@ ONBUILD RUN --mount=type=secret,required=false,id=config/master.key,target=confi
             --mount=type=secret,required=false,id=RAILS_MASTER_KEY,target=config/master.key \
               HOME="/tmp" dockhand prepare-rails-app --clean
 ONBUILD USER root
+ONBUILD RUN chown root "${PACKAGE_JSON_DIR:-.}" && chmod o=u "${PACKAGE_JSON_DIR:-.}"
